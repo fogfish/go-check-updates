@@ -1,0 +1,46 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+
+archives:
+  - format: binary
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+brews:
+  - tap:
+      owner: fogfish
+      name: go-check-updates
+    folder: tap/Formula
+    goarm: "7"
+    homepage:  https://github.com/fogfish/go-check-updates
+    description: go-check-updates upgrades your go.mod dependencies to the latest versions, ignoring specified versions.
+    license: MIT
+    test: |
+      system "#{bin}/go-check-updates -v"
+    dependencies:
+      - name: go
+
+# The lines beneath this are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqo
