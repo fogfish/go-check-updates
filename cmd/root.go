@@ -33,9 +33,25 @@ func init() {
 
 var rootCmd = &cobra.Command{
 	Use:   "go-check-updates",
-	Short: "xxx",
+	Short: "upgrades your go.mod dependencies to the latest versions",
 	Long: `
-xxx
+Upgrades your go.mod dependencies to the latest versions.
+
+The utility is wrapper for Golang's list command:
+
+	go list -u \
+	  -f '{{if (and (not (or .Main .Indirect)) .Update)}}{{.Path}}: {{.Version}} -> {{.Update.Version}}{{end}}' \
+	  -m all
+
+Check status of go.mod dependencies:
+
+	go-check-updates
+
+Upgrades your go.mod dependencies to the latest versions:
+
+	go-check-updates -u
+
+See more info https://github.com/fogfish/go-check-updates
 	`,
 	RunE:    root,
 	Version: "go-check-updates/v0.0.0",
