@@ -4,6 +4,19 @@
 
 ## Quick Start
 
+```bash
+## Install using brew
+brew install fogfish/go-check-updates/go-check-updates
+
+## Alternatively, install from source code
+go install github.com/fogfish/go-check-updates@latest
+
+## check for updates
+go-check-updates
+
+## update dependencies to the latest versions
+go-check-updates -u
+```
 
 ## Inspiration
 
@@ -32,7 +45,18 @@ go list -u \
 ## ...
 ```
 
-The command line utility just simple way of running these commands
+This command line utility just simple way of running these commands.
 
+## How To Contribute
 
+The utility is [MIT](LICENSE) licensed and accepts contributions via GitHub pull requests:
 
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Added some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+## License
+
+[![See LICENSE](https://img.shields.io/github/license/fogfish/go-check-updates.svg?style=for-the-badge)](LICENSE)
