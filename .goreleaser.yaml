@@ -27,7 +27,7 @@ changelog:
       - '^test:'
 
 brews:
-  - tap:
+  - repository:
       owner: fogfish
       name: homebrew-go-check-updates
     folder: Formula
