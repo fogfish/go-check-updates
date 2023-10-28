@@ -6,7 +6,7 @@
 
 ```bash
 ## Install using brew
-brew install fogfish/go-check-updates/go-check-updates
+brew install fogfish/tap/go-check-updates
 
 ## Alternatively, install from source code
 go install github.com/fogfish/go-check-updates@latest

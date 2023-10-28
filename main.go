@@ -21,5 +21,5 @@ var (
 )
 
 func main() {
-	cmd.Execute(fmt.Sprintf("go-check-updates/%s (%s), %s", version, commit, date))
+	cmd.Execute(fmt.Sprintf("go-check-updates/%s (%s), %s", version, commit[:7], date))
 }
