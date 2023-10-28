@@ -4,19 +4,40 @@
 
 ## Quick Start
 
+1. Install utility using either from [Homebrew](https://brew.sh) or [GitHub](https://github.com/fogfish/go-check-updates).
+
 ```bash
 ## Install using brew
 brew install fogfish/tap/go-check-updates
 
 ## Alternatively, install from source code
 go install github.com/fogfish/go-check-updates@latest
+```
 
-## check for updates
+2. Run the command in your Golang repository to check for dependency updates
+
+```bash
 go-check-updates
+```
 
-## update dependencies to the latest versions
+3. Update dependencies to the latest versions
+
+```bash
 go-check-updates -u
 ```
+
+4. Alternatively, you can update dependency and push changes to your git repository. The utility creates a new branch `go-update-deps`.
+
+```bash
+go-check-updates -u --push origin
+```
+
+5. Automate workflow with GitHub Actions to create a pull request every time `go-update-deps` branch is pushed. Craft GitHub Action with following command and install it into your workflow.
+
+```bash
+go-check-updates generate github > .github/workflows/update-deps.yml
+```
+
 
 ## Inspiration
 
@@ -45,17 +66,19 @@ go list -u \
 ## ...
 ```
 
-This command line utility just simple way of running these commands.
+`go-check-update` is the utility that simplify the workflow of running these commands.
+
 
 ## How To Contribute
 
-The utility is [MIT](LICENSE) licensed and accepts contributions via GitHub pull requests:
+`go-check-update` is [MIT](LICENSE) licensed and accepts contributions via GitHub pull requests:
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
 
 ## License
 

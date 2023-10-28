@@ -15,6 +15,18 @@ import (
 	"github.com/fogfish/go-check-updates/internal/types"
 )
 
+func ShowAll(w io.Writer, units []types.Unit) {
+	for _, u := range units {
+		w.Write(
+			[]byte(
+				fmt.Sprintf("\n%s\n", u.Path),
+			),
+		)
+
+		Show(w, u.Mod)
+	}
+}
+
 func Show(w io.Writer, mod []types.Mod) {
 	for _, m := range mod {
 		w.Write(
@@ -22,6 +34,18 @@ func Show(w io.Writer, mod []types.Mod) {
 				fmt.Sprintf("%-12s ⇒ %-12s\t%s\n", m.Version, m.Upgrade, m.Path),
 			),
 		)
+	}
+}
+
+func ShowAllWithColor(w io.Writer, units []types.Unit) {
+	for _, u := range units {
+		w.Write(
+			[]byte(
+				fmt.Sprintf("\n\033[1m%s\033[0m\n", u.Path),
+			),
+		)
+
+		Show(w, u.Mod)
 	}
 }
 
@@ -40,7 +64,7 @@ func ShowWithColor(w io.Writer, mod []types.Mod) {
 		case diff.Patch != "":
 			prefix = m.Version.Major
 			if m.Version.Minor != "" {
-				prefix = "." + m.Version.Minor
+				prefix = prefix + "." + m.Version.Minor
 			}
 			suffix = fmt.Sprintf("\033[32m%s\033[0m", diff)
 		}

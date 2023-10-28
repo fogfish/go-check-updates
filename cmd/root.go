@@ -11,9 +11,11 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/fogfish/go-check-updates/internal/service"
+	"github.com/fogfish/go-check-updates/internal/types"
 	"github.com/spf13/cobra"
 )
 
@@ -28,13 +30,17 @@ func Execute(vsn string) {
 }
 
 var (
-	rootUpdate bool
-	rootPath   string
+	rootUpdate    bool
+	rootRecursive bool
+	rootGitPush   string
+	rootPath      string
 )
 
 func init() {
 	rootCmd.Flags().BoolVarP(&rootUpdate, "update", "u", false, "update go.mod")
-	rootCmd.Flags().StringVar(&rootPath, "path", ".", "path to module")
+	rootCmd.Flags().BoolVarP(&rootRecursive, "recursive", "r", false, "update go.mod recursively")
+	rootCmd.Flags().StringVar(&rootGitPush, "push", "", "push go.mod changes to git repository in branch "+types.UniqueBranchName)
+	rootCmd.Flags().StringVar(&rootPath, "path", "."+string(filepath.Separator), "path to module")
 }
 
 var rootCmd = &cobra.Command{
@@ -59,7 +65,13 @@ Upgrades your go.mod dependencies to the latest versions:
 
 See more info https://github.com/fogfish/go-check-updates
 	`,
-	RunE: root,
+	Example: `
+	go-check-updates
+	go-check-updates -u
+	go-check-updates -u --push github
+	`,
+	SilenceUsage: true,
+	RunE:         root,
 }
 
 func root(cmd *cobra.Command, args []string) error {
@@ -74,7 +86,7 @@ func check(cmd *cobra.Command, args []string) error {
 	bar := progress()
 	bar.Describe("checking go.mod")
 
-	mod, err := service.Check(rootPath)
+	mod, err := service.CheckAll(rootPath, rootRecursive)
 	bar.Finish()
 
 	if err != nil {
@@ -86,8 +98,8 @@ func check(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	service.ShowWithColor(os.Stdout, mod)
-	os.Stdout.WriteString("\n run `go-check-updates -u` to upgrade go.mod\n")
+	service.ShowAllWithColor(os.Stdout, mod)
+	os.Stdout.WriteString("\nrun `go-check-updates -u --push origin` to upgrade go.mod and push changes to upstream repo\n")
 
 	return nil
 }
@@ -96,26 +108,59 @@ func update(cmd *cobra.Command, args []string) error {
 	bar := progress()
 	bar.Describe("checking go.mod")
 
-	mod, err := service.Check(rootPath)
+	units, err := service.CheckAll(rootPath, rootRecursive)
 	if err != nil {
 		return err
 	}
 
 	bar.Finish()
 
-	if len(mod) == 0 {
+	if len(units) == 0 {
 		os.Stdout.WriteString("\n✅ go.mod is up to date.\n")
 		return nil
 	}
 
-	for _, m := range mod {
-		err := service.Update(rootPath, m)
+	if rootGitPush != "" {
+		err = service.GitBranch(rootPath)
 		if err != nil {
 			return err
 		}
 	}
 
-	os.Stdout.WriteString("\n run `go mod tidy`\n")
+	for _, unit := range units {
+		for _, m := range unit.Mod {
+			err := service.Update(unit.Path, m)
+			if err != nil {
+				return err
+			}
+		}
+
+		err = service.GoModTidy(unit.Path)
+		if err != nil {
+			return err
+		}
+
+		if rootGitPush != "" {
+			err = service.GitAdd(unit.Path)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if rootGitPush != "" {
+		err = service.GitCommit(rootPath, units)
+		if err != nil {
+			return err
+		}
+
+		err = service.GitPush(rootPath, rootGitPush)
+		if err != nil {
+			return err
+		}
+
+		service.GitUnBranch(rootPath)
+	}
 
 	return nil
 }

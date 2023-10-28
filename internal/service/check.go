@@ -20,6 +20,55 @@ import (
 	"github.com/fogfish/go-check-updates/internal/types"
 )
 
+func CheckAll(dir string, recursive bool) ([]types.Unit, error) {
+	var paths []string
+	units := make([]types.Unit, 0)
+
+	if !recursive {
+		mod, err := Check(dir)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(mod) > 0 {
+			units = append(units, types.Unit{Path: dir, Mod: mod})
+		}
+
+		return units, nil
+	}
+
+	err := filepath.Walk(dir,
+		func(path string, info os.FileInfo, err error) error {
+			base, file := filepath.Split(path)
+			if file == "go.mod" {
+				if base != "" {
+					paths = append(paths, base)
+				} else {
+					paths = append(paths, dir)
+				}
+			}
+			return nil
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < len(paths); i++ {
+		mod, err := Check(paths[i])
+		if err != nil {
+			return nil, err
+		}
+
+		if len(mod) > 0 {
+			units = append(units, types.Unit{Path: paths[i], Mod: mod})
+		}
+	}
+
+	return units, nil
+}
+
 func Check(dir string) ([]types.Mod, error) {
 	buf := &bytes.Buffer{}
 

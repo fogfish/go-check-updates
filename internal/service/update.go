@@ -30,3 +30,18 @@ func Update(dir string, mod types.Mod) error {
 
 	return nil
 }
+
+func GoModTidy(dir string) error {
+	gcu := exec.Command(
+		"go", "mod", "tidy",
+	)
+	gcu.Dir = dir
+	gcu.Stderr, gcu.Stdout = os.Stderr, os.Stdout
+
+	err := gcu.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

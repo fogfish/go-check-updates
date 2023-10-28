@@ -10,6 +10,8 @@ package types
 
 import "strings"
 
+const UniqueBranchName = "go-update-deps"
+
 // Version of package
 type Vsn struct {
 	Major, Minor, Patch string
@@ -69,4 +71,9 @@ type Mod struct {
 	Path    string
 	Version Vsn
 	Upgrade Vsn
+}
+
+type Unit struct {
+	Path string
+	Mod  []Mod
 }
