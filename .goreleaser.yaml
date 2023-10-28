@@ -39,6 +39,7 @@ brews:
       system "#{bin}/go-check-updates -v"
     dependencies:
       - name: go
+        type: optional
 
 # The lines beneath this are called `modelines`. See `:help modeline`
 # Feel free to remove those if you don't want/use them.
