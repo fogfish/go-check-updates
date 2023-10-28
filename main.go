@@ -9,9 +9,17 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/fogfish/go-check-updates/cmd"
 )
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
-	cmd.Execute()
+	cmd.Execute(fmt.Sprintf("go-check-updates/%s (%s), %s", version, commit, date))
 }

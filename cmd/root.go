@@ -17,7 +17,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Execute() {
+func Execute(vsn string) {
+	rootCmd.Version = vsn
+
 	if err := rootCmd.Execute(); err != nil {
 		e := err.Error()
 		fmt.Println(strings.ToUpper(e[:1]) + e[1:])
@@ -28,10 +30,6 @@ func Execute() {
 var (
 	rootUpdate bool
 	rootPath   string
-
-	version = "dev"
-	commit  = "none"
-	date    = "unknown"
 )
 
 func init() {
@@ -61,8 +59,7 @@ Upgrades your go.mod dependencies to the latest versions:
 
 See more info https://github.com/fogfish/go-check-updates
 	`,
-	RunE:    root,
-	Version: fmt.Sprintf("go-check-updates/%s (%s), %s", version, commit, date),
+	RunE: root,
 }
 
 func root(cmd *cobra.Command, args []string) error {
