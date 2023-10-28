@@ -25,10 +25,18 @@ func Execute() {
 	}
 }
 
-var rootUpdate bool
+var (
+	rootUpdate bool
+	rootPath   string
+
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func init() {
 	rootCmd.Flags().BoolVarP(&rootUpdate, "update", "u", false, "update go.mod")
+	rootCmd.Flags().StringVar(&rootPath, "path", ".", "path to module")
 }
 
 var rootCmd = &cobra.Command{
@@ -54,7 +62,7 @@ Upgrades your go.mod dependencies to the latest versions:
 See more info https://github.com/fogfish/go-check-updates
 	`,
 	RunE:    root,
-	Version: "go-check-updates/v0.0.0",
+	Version: fmt.Sprintf("go-check-updates/%s (%s), %s", version, commit, date),
 }
 
 func root(cmd *cobra.Command, args []string) error {
@@ -69,12 +77,12 @@ func check(cmd *cobra.Command, args []string) error {
 	bar := progress()
 	bar.Describe("checking go.mod")
 
-	mod, err := service.Check("")
+	mod, err := service.Check(rootPath)
+	bar.Finish()
+
 	if err != nil {
 		return err
 	}
-
-	bar.Finish()
 
 	if len(mod) == 0 {
 		os.Stdout.WriteString("\n✅ go.mod is up to date.\n")
@@ -91,7 +99,7 @@ func update(cmd *cobra.Command, args []string) error {
 	bar := progress()
 	bar.Describe("checking go.mod")
 
-	mod, err := service.Check("")
+	mod, err := service.Check(rootPath)
 	if err != nil {
 		return err
 	}
@@ -104,7 +112,7 @@ func update(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, m := range mod {
-		err := service.Update("", m)
+		err := service.Update(rootPath, m)
 		if err != nil {
 			return err
 		}

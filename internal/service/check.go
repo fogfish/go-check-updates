@@ -10,8 +10,11 @@ package service
 
 import (
 	"bytes"
+	"errors"
+	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/fogfish/go-check-updates/internal/types"
@@ -19,6 +22,11 @@ import (
 
 func Check(dir string) ([]types.Mod, error) {
 	buf := &bytes.Buffer{}
+
+	_, err := os.Stat(filepath.Join(dir, "go.mod"))
+	if errors.Is(err, os.ErrNotExist) {
+		return nil, fmt.Errorf("go.mod do not exists at %s", dir)
+	}
 
 	gcu := exec.Command(
 		"go", "list",
@@ -29,7 +37,7 @@ func Check(dir string) ([]types.Mod, error) {
 	gcu.Dir = dir
 	gcu.Stderr, gcu.Stdout = os.Stderr, buf
 
-	err := gcu.Run()
+	err = gcu.Run()
 	if err != nil {
 		return nil, err
 	}
