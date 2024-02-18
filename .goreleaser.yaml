@@ -29,7 +29,7 @@ changelog:
 brews:
   - repository:
       owner: fogfish
-      name: homebrew-tap
+      name: go-check-updates
     folder: Formula
     goarm: "7"
     homepage:  https://github.com/fogfish/go-check-updates

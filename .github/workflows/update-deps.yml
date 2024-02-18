@@ -1,0 +1,42 @@
+
+##
+## Open Pull Request: Update dependency for Go modules
+##
+## Note: add explicit following "push" trigger to other workflows that checks quality.
+##       GitHub would not trigger actions automatically, see https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#workarounds-to-trigger-further-workflow-runs
+##
+## Copy the following lines:
+##  on:
+##    push:
+##      branches:
+##        - go-update-deps
+##        - /refs/heads/go-update-deps
+##
+##
+name: deps
+on:
+  push:
+    branches:
+      - go-update-deps
+      - /refs/heads/go-update-deps
+
+jobs:
+  deps:
+    permissions:
+      contents: read
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4.1.1
+
+      - uses: diillson/auto-pull-request@v1.0.1
+        id: open-pull-request
+        with:
+          destination_branch: "main"
+          source_branch: "go-update-deps"
+
+      - uses: actions/labeler@v4
+        with:
+          pr-number: ${{steps.open-pull-request.outputs.pr_number}}

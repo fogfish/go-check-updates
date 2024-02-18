@@ -8,7 +8,10 @@
 
 ```bash
 ## Install using brew
-brew install fogfish/tap/go-check-updates
+brew tap fogfish/go-check-updates https://github.com/fogfish/go-check-updates
+brew install -q go-check-updates
+
+## use `brew upgrade` to upgrade to latest version 
 
 ## Alternatively, install from source code
 go install github.com/fogfish/go-check-updates@latest
