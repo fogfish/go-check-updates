@@ -79,9 +79,5 @@ jobs:
         with:
           destination_branch: "main"
           source_branch: "` + types.UniqueBranchName + `"
-
-      - uses: actions/labeler@v4
-        with:
-          pr-number: ${{steps.open-pull-request.outputs.pr_number}}
 `
 }
