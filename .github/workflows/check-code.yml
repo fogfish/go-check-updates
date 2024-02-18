@@ -8,6 +8,11 @@ on:
       - opened
       - synchronize
 
+  push:
+    branches:
+      - go-update-deps
+      - /refs/heads/go-update-deps
+
 jobs:
 
   code:
