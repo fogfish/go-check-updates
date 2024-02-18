@@ -41,6 +41,14 @@ go-check-updates -u --push origin
 go-check-updates generate github > .github/workflows/update-deps.yml
 ```
 
+Use the following trigger to activate quality check pipelines when branch `go-update-deps` is created.
+
+```yaml
+  push:
+    branches:
+      - go-update-deps
+      - /refs/heads/go-update-deps
+```
 
 ## Inspiration
 
