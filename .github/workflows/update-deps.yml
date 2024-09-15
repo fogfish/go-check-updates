@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       - uses: diillson/auto-pull-request@v1.0.1
         id: open-pull-request
