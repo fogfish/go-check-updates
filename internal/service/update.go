@@ -18,7 +18,7 @@ import (
 func Update(dir string, mod types.Mod) error {
 	gcu := exec.Command(
 		"go", "get",
-		"-d", mod.Path+"@"+mod.Upgrade.String(),
+		mod.Path+"@"+mod.Upgrade.String(),
 	)
 	gcu.Dir = dir
 	gcu.Stderr, gcu.Stdout = os.Stderr, os.Stdout
