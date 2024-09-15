@@ -5,45 +5,49 @@
 class GoCheckUpdates < Formula
   desc "go-check-updates upgrades your go.mod dependencies to the latest versions, ignoring specified versions."
   homepage "https://github.com/fogfish/go-check-updates"
-  version "0.4.5"
+  version "0.4.6"
   license "MIT"
 
   depends_on "go" => :optional
 
   on_macos do
-    if Hardware::CPU.intel?
-      url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.5/go-check-updates_0.4.5_darwin_amd64"
-      sha256 "c596e2847c87c69ffefd4b4035c97d6850311c3cb6ffd647cd05ddde8f5c0204"
+    on_intel do
+      url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.6/go-check-updates_0.4.6_darwin_amd64"
+      sha256 "b202fb5a45432839e6ebce3d88953c9645e0c084eb2cdf17c87a8a0795821025"
 
       def install
-        bin.install "go-check-updates_0.4.5_darwin_amd64" => "go-check-updates"
+        bin.install "go-check-updates_0.4.6_darwin_amd64" => "go-check-updates"
       end
     end
-    if Hardware::CPU.arm?
-      url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.5/go-check-updates_0.4.5_darwin_arm64"
-      sha256 "e70283d7eb7a55439863bbc5a40fcca48189d82e4e64aea0711164a4b1f84717"
+    on_arm do
+      url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.6/go-check-updates_0.4.6_darwin_arm64"
+      sha256 "bf5d098a1f8800a04f0b183e8d83b9aa05760f1169c903c841dd523ff3a1ae1a"
 
       def install
-        bin.install "go-check-updates_0.4.5_darwin_arm64" => "go-check-updates"
+        bin.install "go-check-updates_0.4.6_darwin_arm64" => "go-check-updates"
       end
     end
   end
 
   on_linux do
-    if Hardware::CPU.intel?
-      url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.5/go-check-updates_0.4.5_linux_amd64"
-      sha256 "cbb4835b1e30b86cd4d1c5b339849a8e7cd374a987bdf2ce220decbf8916162a"
+    on_intel do
+      if Hardware::CPU.is_64_bit?
+        url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.6/go-check-updates_0.4.6_linux_amd64"
+        sha256 "aba371e7aa701aa3acdd00ea3611160f94bc63be7aa2093cb91d054d69d7da4e"
 
-      def install
-        bin.install "go-check-updates_0.4.5_linux_amd64" => "go-check-updates"
+        def install
+          bin.install "go-check-updates_0.4.6_linux_amd64" => "go-check-updates"
+        end
       end
     end
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.5/go-check-updates_0.4.5_linux_arm64"
-      sha256 "d36c47dee737ddd726e2500753bf01729a3c181d566d4b845514c2cfc21825bf"
+    on_arm do
+      if Hardware::CPU.is_64_bit?
+        url "https://github.com/fogfish/go-check-updates/releases/download/v0.4.6/go-check-updates_0.4.6_linux_arm64"
+        sha256 "f2793b7feef1e69f108fc945a6ca83a6c350f9e3e30c8e078e70f756d778979d"
 
-      def install
-        bin.install "go-check-updates_0.4.5_linux_arm64" => "go-check-updates"
+        def install
+          bin.install "go-check-updates_0.4.6_linux_arm64" => "go-check-updates"
+        end
       end
     end
   end
